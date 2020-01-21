@@ -1,14 +1,14 @@
 pipeline {
-        agent any
+    agent {
+        docker {
+            image 'maven:3-alpine'
+            args '-v /root/.m2:/root/.m2'
+        }
+    }
     stages {
-        stage('build && SonarQube analysis') {
+        stage('Build') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    // Optionally use a Maven environment you've configured already
-                    withMaven(maven:'Maven 3.5') {
-                        sh 'mvn clean package sonar:sonar'
-                    }
-                }
+                sh 'mvn -B -DskipTests clean package'
             }
         }
     }
