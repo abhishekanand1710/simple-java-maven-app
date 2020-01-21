@@ -1,42 +1,19 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
-    }
-    options {
-        skipStagesAfterUnstable()
-    }
+    agent any
     stages {
-        stage('Build') {
+        stage('SCM') {
             steps {
-                sh 'mvn -B -DskipTests clean package'
+                git url: 'https://github.com/foo/bar.git'
             }
         }
-        stage('SonarQube analysis') {
-            environment {
-                scannerHome = tool 'SonarQubeScanner'
-            }
+        stage('build && SonarQube analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh "${scannerHome}/bin/sonar-scanner"
+                    // Optionally use a Maven environment you've configured already
+                    withMaven(maven:'Maven 3.5') {
+                        sh 'mvn clean package sonar:sonar'
+                    }
                 }
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
-        stage('Deliver') {
-            steps {
-                sh './jenkins/scripts/deliver.sh'
             }
         }
     }
