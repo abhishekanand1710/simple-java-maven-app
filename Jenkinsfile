@@ -20,8 +20,7 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ab04b455fcecbebde050194392e9c00e0f3b48ef \
-                                                           -Dsonar.sources=. "
+                    sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
         }
