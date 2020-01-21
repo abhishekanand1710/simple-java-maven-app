@@ -15,15 +15,19 @@ pipeline {
             }
         }
         stage('SonarQube analysis') {
-            environment {
-                scannerHome = tool 'SonarQubeScanner'
-            }
-            steps {
                 withSonarQubeEnv('sonar_scanner') {
-                    sh "${scannerHome}/bin/sonar-scanner"
+                  sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' +
+                  '-f all/pom.xml ' +
+                  '-Dsonar.projectKey=com.huettermann:all:master ' +
+                  '-Dsonar.login=$SONAR_UN ' +
+                  '-Dsonar.password=$SONAR_PW ' +
+                  '-Dsonar.language=java ' +
+                  '-Dsonar.sources=. ' +
+                  '-Dsonar.tests=. ' +
+                  '-Dsonar.test.inclusions=**/*Test*/** ' +
+                  '-Dsonar.exclusions=**/*Test*/**'
                 }
             }
-        }
         stage('Test') {
             steps {
                 sh 'mvn test'
