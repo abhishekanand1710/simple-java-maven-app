@@ -15,8 +15,12 @@ pipeline {
             }
         }
         stage('SonarQube analysis') {
-            withSonarQubeEnv('sonar_scanner') { // You can override the credential to be used
-              sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar'
+            environment {
+                scannerHome = tool 'SonarQubeScanner'
+            }
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh "${scannerHome}/bin/sonar-scanner"
             }
         }
         stage('Test') {
