@@ -35,13 +35,18 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('SoanrQube analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh 'mvn sonar:sonar'
+//         stage('SoanrQube analysis') {
+//             steps {
+//                 withSonarQubeEnv('SonarQube') {
+//                     sh 'mvn sonar:sonar'
+//                 }
+//             }
+//         }
+        stage('Sonar') {
+                    steps {
+                        sh "mvn sonar:sonar -Dsonar.host.url=${env.SONARQUBE_HOST}"
+                    }
                 }
-            }
-        }
         stage('Test') {
             steps {
                 sh 'mvn test'
