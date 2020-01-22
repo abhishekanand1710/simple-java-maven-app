@@ -42,11 +42,6 @@ pipeline {
 //                 }
 //             }
 //         }
-        stage('Sonar') {
-                    steps {
-                        sh "mvn sonar:sonar"
-                    }
-                }
         stage('Test') {
             steps {
                 sh 'mvn test'
