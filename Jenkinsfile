@@ -30,13 +30,13 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
-//         stage('SoanrQube analysis') {
-//             steps {
-//                 withSonarQubeEnv('SonarQube') {
-//                     sh 'mvn sonar:sonar'
-//                 }
-//             }
-//         }
+        stage('SoanrQube analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
         stage('Test') {
             steps {
                 sh 'mvn test'
